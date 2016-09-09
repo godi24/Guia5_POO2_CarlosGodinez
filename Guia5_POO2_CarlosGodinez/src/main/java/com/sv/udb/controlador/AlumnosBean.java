@@ -8,6 +8,7 @@ package com.sv.udb.controlador;
 import com.sv.udb.modelo.Alumnos;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
@@ -92,7 +93,7 @@ public class AlumnosBean implements Serializable{
             this.guardar = true;
             this.alumList.add(this.objeAlum);
             this.objeAlum = new Alumnos();
-            ctx.execute("setMessage('MESS_SUCC', 'Alerta', 'Datos guardados.');");
+            ctx.execute("setMessage('MESS_SUCC', 'Alerta', 'Datos guardados con éxito.');");
         }
         catch(Exception ex)
         {
@@ -105,6 +106,74 @@ public class AlumnosBean implements Serializable{
             em.close();
             emf.close();            
         }
+    }
+    
+    public void modi(int codi)
+    {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PARCIALPU");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try
+        {
+            Alumnos objAlum = em.find(Alumnos.class, codi);
+            em.merge(objAlum);
+            tx.commit();
+            this.alumList = new ArrayList<>();
+            EntityManagerFactory emf1 = Persistence.createEntityManagerFactory("PARCIALPU");
+            EntityManager em1 = emf1.createEntityManager();
+            try
+            {
+               TypedQuery<Alumnos> query =em1.createNamedQuery("Alumnos.findAll", Alumnos.class);
+               this.alumList = query.getResultList();
+            }
+            catch(Exception ex)
+            {
+
+            }
+            this.objeAlum = new Alumnos();
+        }
+        catch(Exception ex)
+        {
+            tx.rollback();
+        }
+        em.close();
+        emf.close();
+    }
+    
+    public void elim(int codi)
+    {
+        RequestContext ctx = RequestContext.getCurrentInstance(); //Capturar el contexto
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PARCIALPU");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        try
+        {
+            Alumnos objAlum = em.find(Alumnos.class, codi);
+            em.remove(objAlum);
+            tx.commit();
+            this.alumList = new ArrayList<>();
+            EntityManagerFactory emf1 = Persistence.createEntityManagerFactory("PARCIALPU");
+            EntityManager em1 = emf1.createEntityManager();
+            try
+            {
+               TypedQuery<Alumnos> query =em1.createNamedQuery("Alumnos.findAll", Alumnos.class);
+               this.alumList = query.getResultList();
+            }
+            catch(Exception ex)
+            {
+
+            }
+            this.objeAlum = new Alumnos();
+            ctx.execute("setMessage('MESS_SUCC', 'Alerta', 'Registro eliminado con éxito.');");
+        }
+        catch(Exception ex)
+        {
+            tx.rollback();
+        }
+        em.close();
+        emf.close();
     }
     
     public void cons(int codi)
