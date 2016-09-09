@@ -74,7 +74,7 @@ and open the template in the editor.
                                 </div>
                                 <div style="display: inline-block">
                                     <h:commandLink id="btonModi" class="btn btn-success">
-                                        <p:ajax listener="#{alumnosBean.modi(alumnosBean.objeAlum.codiAlum)}" process="@form" update="@form :FormTabl:ContAlum"/>
+                                        <p:ajax listener="#{alumnosBean.modi()}" process="@form" update="@form :FormTabl:ContAlum"/>
                                         <i class="fa fa-pencil"/> Modificar
                                     </h:commandLink>
                                 </div>
@@ -118,7 +118,7 @@ and open the template in the editor.
                                             <h:commandLink id="btonModi" class="btn btn-default">
                                                 <p:ajax listener="#{alumnosBean.cons(fila.codiAlum)}" process="@form" update="@form :FormAlum"/>
                                                 <i class="fa fa-search"/> Consultar datos
-                                            </h:commandLink> <!--Falta el método modi()-->
+                                            </h:commandLink> 
                                         </h:outputLink>
                                     </h:column>
                                 </h:dataTable>

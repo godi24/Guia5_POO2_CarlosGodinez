@@ -8,7 +8,6 @@ package com.sv.udb.controlador;
 import com.sv.udb.modelo.Alumnos;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
@@ -68,19 +67,18 @@ public class AlumnosBean implements Serializable{
         this.alumList = this.ConsTodo();
     }
     
-    public List<Alumnos> ConsTodo()
-    {
+    public List<Alumnos> ConsTodo() {
         List<Alumnos> resp = new ArrayList<>();
-          EntityManagerFactory emf = Persistence.createEntityManagerFactory("PARCIALPU");
-           EntityManager em = emf.createEntityManager();
-        try
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PARCIALPU");
+        EntityManager em = emf.createEntityManager();
+        try 
         {
-          TypedQuery<Alumnos> query =em.createNamedQuery("Alumnos.findAll", Alumnos.class);
-           resp = query.getResultList();
-        }
-        catch(Exception ex)
+            TypedQuery<Alumnos> query = em.createNamedQuery("Alumnos.findAll", Alumnos.class);
+            resp = query.getResultList();
+        } 
+        catch (Exception ex) 
         {
-            
+
         }
         return resp;
     }
@@ -114,19 +112,20 @@ public class AlumnosBean implements Serializable{
         }
     }
     
-    public void modi(int codi)
+    public void modi()
     {
+        RequestContext ctx = RequestContext.getCurrentInstance(); //Capturar el contexto
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("PARCIALPU");
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try
         {
-            Alumnos objAlum = em.find(Alumnos.class, codi);
-            em.merge(objAlum);
+            em.merge(objeAlum);
             tx.commit();
             this.alumList = this.ConsTodo();
             this.objeAlum = new Alumnos();
+            ctx.execute("setMessage('MESS_SUCC', 'Alerta', 'Registro modificado con éxito.');");
         }
         catch(Exception ex)
         {
@@ -145,8 +144,8 @@ public class AlumnosBean implements Serializable{
         tx.begin();
         try
         {
-            Alumnos objAlum = em.find(Alumnos.class, codi);
-            em.remove(objAlum);
+            Alumnos obj = em.find(Alumnos.class, codi);
+            em.remove(obj);
             tx.commit();
             this.alumList = this.ConsTodo();
             this.objeAlum = new Alumnos();
