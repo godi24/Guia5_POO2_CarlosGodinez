@@ -23,7 +23,7 @@ import org.primefaces.context.RequestContext;
 
 /**
  *
- * @author REGISTRO
+ * @author Carlos
  */
 @Named(value = "alumnosBean")
 @ViewScoped
@@ -65,18 +65,24 @@ public class AlumnosBean implements Serializable{
     {
         this.objeAlum = new Alumnos();
         this.guardar = true;
-        this.alumList = new ArrayList<>();
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PARCIALPU");
-        EntityManager em = emf.createEntityManager();
+        this.alumList = this.ConsTodo();
+    }
+    
+    public List<Alumnos> ConsTodo()
+    {
+        List<Alumnos> resp = new ArrayList<>();
+          EntityManagerFactory emf = Persistence.createEntityManagerFactory("PARCIALPU");
+           EntityManager em = emf.createEntityManager();
         try
         {
-           TypedQuery<Alumnos> query =em.createNamedQuery("Alumnos.findAll", Alumnos.class);
-           this.alumList = query.getResultList();
+          TypedQuery<Alumnos> query =em.createNamedQuery("Alumnos.findAll", Alumnos.class);
+           resp = query.getResultList();
         }
         catch(Exception ex)
         {
             
         }
+        return resp;
     }
     
     public void guar()
@@ -91,7 +97,7 @@ public class AlumnosBean implements Serializable{
             em.persist(this.objeAlum);
             tx.commit();
             this.guardar = true;
-            this.alumList.add(this.objeAlum);
+            this.alumList = this.ConsTodo();
             this.objeAlum = new Alumnos();
             ctx.execute("setMessage('MESS_SUCC', 'Alerta', 'Datos guardados con éxito.');");
         }
@@ -119,18 +125,7 @@ public class AlumnosBean implements Serializable{
             Alumnos objAlum = em.find(Alumnos.class, codi);
             em.merge(objAlum);
             tx.commit();
-            this.alumList = new ArrayList<>();
-            EntityManagerFactory emf1 = Persistence.createEntityManagerFactory("PARCIALPU");
-            EntityManager em1 = emf1.createEntityManager();
-            try
-            {
-               TypedQuery<Alumnos> query =em1.createNamedQuery("Alumnos.findAll", Alumnos.class);
-               this.alumList = query.getResultList();
-            }
-            catch(Exception ex)
-            {
-
-            }
+            this.alumList = this.ConsTodo();
             this.objeAlum = new Alumnos();
         }
         catch(Exception ex)
@@ -153,18 +148,7 @@ public class AlumnosBean implements Serializable{
             Alumnos objAlum = em.find(Alumnos.class, codi);
             em.remove(objAlum);
             tx.commit();
-            this.alumList = new ArrayList<>();
-            EntityManagerFactory emf1 = Persistence.createEntityManagerFactory("PARCIALPU");
-            EntityManager em1 = emf1.createEntityManager();
-            try
-            {
-               TypedQuery<Alumnos> query =em1.createNamedQuery("Alumnos.findAll", Alumnos.class);
-               this.alumList = query.getResultList();
-            }
-            catch(Exception ex)
-            {
-
-            }
+            this.alumList = this.ConsTodo();
             this.objeAlum = new Alumnos();
             ctx.execute("setMessage('MESS_SUCC', 'Alerta', 'Registro eliminado con éxito.');");
         }
