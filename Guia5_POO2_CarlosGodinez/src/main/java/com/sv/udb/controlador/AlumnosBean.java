@@ -90,6 +90,7 @@ public class AlumnosBean implements Serializable{
             em.persist(this.objeAlum);
             tx.commit();
             this.guardar = true;
+            this.alumList.add(this.objeAlum);
             this.objeAlum = new Alumnos();
             ctx.execute("setMessage('MESS_SUCC', 'Alerta', 'Datos guardados.');");
         }
@@ -97,6 +98,25 @@ public class AlumnosBean implements Serializable{
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error.');");
             tx.rollback();
+            ex.printStackTrace();
+        }
+        finally
+        {
+            em.close();
+            emf.close();            
+        }
+    }
+    
+    public void cons(int codi)
+    {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PARCIALPU");
+        EntityManager em = emf.createEntityManager();
+        try
+        {
+            this.objeAlum = em.find(Alumnos.class, codi);
+        }
+        catch(Exception ex)
+        {
             ex.printStackTrace();
         }
         finally
